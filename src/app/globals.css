@@ -1,0 +1,126 @@
+@import "tailwindcss";
+
+:root {
+  --bg: #0a0a0b;
+  --bg-soft: #121214;
+  --ink: #e9e4da;
+  --muted: #8a857a;
+  --accent: #ff4d00;
+  --line: rgba(233, 228, 218, 0.14);
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-bg-soft: var(--bg-soft);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-line: var(--line);
+  --font-display: var(--font-syne);
+  --font-body: var(--font-inter);
+  --font-mono: var(--font-plex-mono);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-inter), system-ui, sans-serif;
+  overflow-x: hidden;
+}
+
+/* Custom cursor replaces the native one on precise pointers.
+   <video> is exempt so the native controls in the project modal stay usable. */
+@media (pointer: fine) {
+  *:not(video) {
+    cursor: none;
+  }
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--bg);
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(233, 228, 218, 0.2);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
+}
+
+/* Outlined display type for oversized background words */
+.text-outline {
+  -webkit-text-stroke: 1px rgba(233, 228, 218, 0.22);
+  color: transparent;
+}
+
+/* Film grain overlay — kept intentionally faint */
+@keyframes grain {
+  0%, 100% { transform: translate(0, 0); }
+  20% { transform: translate(-12%, 6%); }
+  40% { transform: translate(6%, -18%); }
+  60% { transform: translate(12%, 4%); }
+  80% { transform: translate(-6%, 14%); }
+}
+
+.film-grain::after {
+  content: "";
+  position: fixed;
+  inset: -50%;
+  width: 200%;
+  height: 200%;
+  pointer-events: none;
+  z-index: 9990;
+  opacity: 0.028;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='1' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  /* Tile the noise at its native 256px instead of stretching one giant
+     raster across a 200%-viewport layer — dramatically less paint memory */
+  background-size: 256px 256px;
+  background-repeat: repeat;
+  animation: grain 8s steps(10) infinite;
+  will-change: transform;
+}
+
+/* Infinite marquee strip */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.marquee-track {
+  animation: marquee 28s linear infinite;
+  will-change: transform;
+}
+
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .film-grain::after,
+  .marquee-track {
+    animation: none;
+  }
+}
