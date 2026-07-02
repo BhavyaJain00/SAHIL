@@ -4,6 +4,7 @@ import { Nav } from "@/components/layout/Nav";
 import { Hero } from "@/components/sections/Hero";
 import { Marquee } from "@/components/sections/Marquee";
 import { WorkSection } from "@/components/work/WorkSection";
+import { HorizontalGallery } from "@/components/sections/HorizontalGallery";
 import { About } from "@/components/sections/About";
 import { Services } from "@/components/sections/Services";
 import { Footer } from "@/components/sections/Footer";
@@ -18,6 +19,7 @@ export default function Home() {
           <Hero />
           <Marquee />
           <WorkSection />
+          <HorizontalGallery />
           <About />
           <Services />
           <Footer />

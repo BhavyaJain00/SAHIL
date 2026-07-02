@@ -1,11 +1,18 @@
 "use client";
 
 import { useRef } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, useInView } from "framer-motion";
 import { TextReveal } from "@/components/ui/Reveal";
 import { useLoaded } from "@/components/ui/LoadProvider";
 import { easeOutExpo, parallaxFactor, pendulumPeriod } from "@/lib/motion";
 import { site, stats } from "@/data/portfolio";
+import { Magnetic } from "@/components/ui/Magnetic";
+import dynamic from "next/dynamic";
+
+const SceneCanvas = dynamic(
+  () => import("@/components/three/SceneCanvas").then((m) => m.SceneCanvas),
+  { ssr: false }
+);
 
 // One viewport-height of scroll travel, distributed by perspective projection:
 // a layer at depth z lags the content plane by S·(1 − 1/z).
@@ -16,6 +23,8 @@ const Z_TITLE = 1.25; // the headline block is just off the content plane
 export function Hero() {
   const loaded = useLoaded();
   const ref = useRef<HTMLElement>(null);
+  const isInView = useInView(ref, { margin: "100px" });
+
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start start", "end start"],
@@ -47,9 +56,14 @@ export function Hero() {
           {site.brand.split(" ")[0]}
         </div>
         <div className="absolute left-1/2 top-1/3 h-[60vh] w-[60vw] -translate-x-1/2 rounded-full bg-accent/[0.04] blur-[120px]" />
+        
+        {/* Dynamic 3D particle background (mounted only when visible) */}
+        <div className="absolute inset-0 opacity-45">
+          {isInView && <SceneCanvas />}
+        </div>
       </motion.div>
 
-      <motion.div style={{ y: yTitle, opacity: fade }} className="relative">
+      <motion.div style={{ y: yTitle, opacity: fade }} className="relative z-10">
         <motion.div
           className="mb-6 flex flex-wrap items-center justify-between gap-2 border-b border-line pb-4 font-mono text-[11px] uppercase tracking-[0.25em] text-muted"
           initial={{ opacity: 0 }}
@@ -111,28 +125,32 @@ export function Hero() {
         </div>
       </motion.div>
 
-      {/* Scroll cue */}
-      <motion.a
-        href="#work"
-        className="absolute bottom-10 right-5 hidden flex-col items-center gap-3 sm:right-8 md:flex"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: loaded ? 1 : 0 }}
-        transition={{ delay: 1.1, duration: 0.8 }}
-        aria-label="Scroll to work"
-      >
-        <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-muted [writing-mode:vertical-lr]">
-          Scroll
-        </span>
-        <span className="relative h-12 w-px overflow-hidden bg-line">
-          {/* Sweep period = a 60cm pendulum: T = 2π√(L/g) ≈ 1.55s; sinusoidal
-              easing ≈ simple harmonic motion along the track. */}
-          <motion.span
-            className="absolute left-0 top-0 h-1/2 w-full bg-accent"
-            animate={{ y: ["-100%", "220%"] }}
-            transition={{ duration: pendulumPeriod(0.6), repeat: Infinity, ease: "easeInOut" }}
-          />
-        </span>
-      </motion.a>
+      {/* Scroll cue wrapped in Magnetic pull */}
+      <div className="absolute bottom-10 right-5 hidden sm:right-8 md:block z-20">
+        <Magnetic strength={0.3}>
+          <motion.a
+            href="#work"
+            className="flex flex-col items-center gap-3 cursor-none"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: loaded ? 1 : 0 }}
+            transition={{ delay: 1.1, duration: 0.8 }}
+            aria-label="Scroll to work"
+          >
+            <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-muted [writing-mode:vertical-lr] select-none">
+              Scroll
+            </span>
+            <span className="relative h-12 w-px overflow-hidden bg-line">
+              {/* Sweep period = a 60cm pendulum: T = 2π√(L/g) ≈ 1.55s; sinusoidal
+                  easing ≈ simple harmonic motion along the track. */}
+              <motion.span
+                className="absolute left-0 top-0 h-1/2 w-full bg-accent"
+                animate={{ y: ["-100%", "220%"] }}
+                transition={{ duration: pendulumPeriod(0.6), repeat: Infinity, ease: "easeInOut" }}
+              />
+            </span>
+          </motion.a>
+        </Magnetic>
+      </div>
     </section>
   );
 }

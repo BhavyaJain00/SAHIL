@@ -6,6 +6,7 @@ import { Magnetic } from "@/components/ui/Magnetic";
 import { useLoaded } from "@/components/ui/LoadProvider";
 import { SPRING_NAV } from "@/lib/motion";
 import { site } from "@/data/portfolio";
+import { TextScramble } from "@/components/ui/TextScramble";
 
 const LINKS = [
   { label: "Work", href: "#work" },
@@ -13,22 +14,13 @@ const LINKS = [
   { label: "Contact", href: "#contact" },
 ];
 
-/** Link text rolls upward on hover, revealing an accent copy — a classic micro-interaction. */
 function RollLink({ label, href }: { label: string; href: string }) {
   return (
     <a
       href={href}
-      className="group relative block h-[1.1em] overflow-hidden font-mono text-xs uppercase tracking-[0.25em]"
+      className="group relative block font-mono text-xs uppercase tracking-[0.25em]"
     >
-      <span className="block transition-transform duration-300 ease-out group-hover:-translate-y-full">
-        {label}
-      </span>
-      <span
-        aria-hidden
-        className="absolute left-0 top-full block text-accent transition-transform duration-300 ease-out group-hover:-translate-y-full"
-      >
-        {label}
-      </span>
+      <TextScramble text={label} trigger="hover" className="text-ink transition-colors duration-200 group-hover:text-accent" />
     </a>
   );
 }
@@ -55,9 +47,9 @@ export function Nav() {
     >
       <nav className="flex items-center justify-between px-5 py-5 text-ink sm:px-8">
         <Magnetic strength={0.25}>
-          <a href="#top" className="font-display text-lg font-bold uppercase tracking-tight">
-            {site.brand.split(" ")[0]}
-            <span className="text-accent">®</span>
+          <a href="#top" className="font-display text-lg font-bold uppercase tracking-tight group">
+            <TextScramble text={site.brand.split(" ")[0]} trigger="hover" />
+            <span className="text-accent transition-transform duration-300 group-hover:rotate-12 inline-block ml-0.5">®</span>
           </a>
         </Magnetic>
 

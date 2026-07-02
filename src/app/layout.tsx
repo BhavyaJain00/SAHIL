@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Syne, IBM_Plex_Mono } from "next/font/google";
+import { SmoothScrollProvider } from "@/components/ui/SmoothScrollProvider";
 import "./globals.css";
 
 const inter = Inter({
@@ -36,7 +37,9 @@ export default function RootLayout({
       data-scroll-behavior="smooth"
       className={`${inter.variable} ${syne.variable} ${plexMono.variable}`}
     >
-      <body className="min-h-screen bg-bg text-ink antialiased">{children}</body>
+      <body className="min-h-screen bg-bg text-ink antialiased">
+        <SmoothScrollProvider>{children}</SmoothScrollProvider>
+      </body>
     </html>
   );
 }

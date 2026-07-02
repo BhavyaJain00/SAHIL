@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import type { PortfolioVideo } from "@/data/portfolio";
 import { SPRING_MODAL, easeOutExpo } from "@/lib/motion";
 import { useLoaded } from "@/components/ui/LoadProvider";
+import { Tilt } from "@/components/ui/Tilt";
 
 type WorkCardProps = {
   video: PortfolioVideo;
@@ -36,15 +37,12 @@ export const WorkCard = memo(function WorkCard({ video, index, onSelect, ref }: 
     }
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
-          setInView(true);
-          observer.disconnect();
-        }
+        setInView(entry.isIntersecting);
       },
-      { rootMargin: "150px" }
+      { rootMargin: "200px" }
     );
     observer.observe(el);
-    return () => observer.disconnect();
+    return () => observer.unobserve(el);
   }, []);
 
   const isSourceActive = loaded && inView;
@@ -71,7 +69,7 @@ export const WorkCard = memo(function WorkCard({ video, index, onSelect, ref }: 
       // Near-critically damped spring (ζ = 0.85) for entrance and layout
       // reflow; the per-index delay cascades the grid like falling dominoes.
       transition={{ type: "spring", ...SPRING_MODAL, delay: index * 0.04 }}
-      className={`group relative overflow-hidden rounded-md bg-bg-soft ring-1 ring-line ${
+      className={`group relative overflow-hidden rounded-md bg-bg-soft ring-1 ring-line cursor-none ${
         SPAN_CLASS[video.span ?? "default"]
       }`}
       data-cursor="play"
@@ -79,41 +77,52 @@ export const WorkCard = memo(function WorkCard({ video, index, onSelect, ref }: 
       onMouseLeave={stop}
       onClick={() => onSelect(video)}
     >
-      <div ref={containerRef} className="absolute inset-0 h-full w-full">
-        {isSourceActive && (
-          <video
-            ref={videoRef}
-            src={`${video.file}#t=0.1`}
-            muted
-            loop
-            playsInline
-            preload="metadata"
-            className="absolute inset-0 h-full w-full object-cover brightness-[0.65] grayscale transition-[filter,transform] duration-700 ease-out group-hover:scale-[1.04] group-hover:brightness-100 group-hover:grayscale-0"
-          />
-        )}
-      </div>
+      <Tilt className="absolute inset-0 h-full w-full overflow-hidden" maxRotate={12}>
+        <div ref={containerRef} className="absolute inset-0 h-full w-full">
+          {isSourceActive && (
+            <video
+              ref={videoRef}
+              src={`${video.file}#t=0.1`}
+              muted
+              loop
+              playsInline
+              preload="metadata"
+              className="absolute inset-0 h-full w-full object-cover brightness-[0.65] grayscale transition-[filter,transform] duration-700 ease-out group-hover:scale-[1.04] group-hover:brightness-100 group-hover:grayscale-0"
+            />
+          )}
+        </div>
 
-      {/* Bottom gradient for legibility */}
-      <div className="absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-bg/90 to-transparent" />
+        {/* Bottom gradient for legibility */}
+        <div className="absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-bg/90 to-transparent pointer-events-none" />
 
-      <div className="absolute left-3 top-3 font-mono text-[10px] tracking-[0.2em] text-ink/60">
-        {String(index + 1).padStart(2, "0")}
-      </div>
-      <div className="absolute right-3 top-3 rounded-full border border-line bg-bg/50 px-3 py-1 font-mono text-[9px] uppercase tracking-[0.2em] text-ink/70 opacity-0 backdrop-blur-sm transition-opacity duration-300 group-hover:opacity-100">
-        {video.category}
-      </div>
-
-      <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-3 p-4">
-        <h3 className="font-display text-sm font-semibold uppercase tracking-wide sm:text-base">
-          {video.title}
-        </h3>
-        <span
-          aria-hidden
-          className="translate-y-2 font-mono text-xs text-accent opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100"
+        <div 
+          className="absolute left-3 top-3 font-mono text-[10px] tracking-[0.2em] text-ink/60 select-none"
+          style={{ transform: "translateZ(30px)" }}
         >
-          ↗
-        </span>
-      </div>
+          {String(index + 1).padStart(2, "0")}
+        </div>
+        <div 
+          className="absolute right-3 top-3 rounded-full border border-line bg-bg/50 px-3 py-1 font-mono text-[9px] uppercase tracking-[0.2em] text-ink/70 opacity-0 backdrop-blur-sm transition-opacity duration-300 group-hover:opacity-100 select-none"
+          style={{ transform: "translateZ(30px)" }}
+        >
+          {video.category}
+        </div>
+
+        <div 
+          className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-3 p-4 select-none"
+          style={{ transform: "translateZ(45px)" }}
+        >
+          <h3 className="font-display text-sm font-semibold uppercase tracking-wide sm:text-base">
+            {video.title}
+          </h3>
+          <span
+            aria-hidden
+            className="translate-y-2 font-mono text-xs text-accent opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100"
+          >
+            ↗
+          </span>
+        </div>
+      </Tilt>
     </motion.article>
   );
 });

@@ -1,3 +1,7 @@
+"use client";
+
+import { useRef } from "react";
+import { useInView } from "framer-motion";
 import { experience } from "@/data/portfolio";
 
 function Row({ hidden }: { hidden?: boolean }) {
@@ -17,9 +21,15 @@ function Row({ hidden }: { hidden?: boolean }) {
 }
 
 export function Marquee() {
+  const containerRef = useRef<HTMLElement>(null);
+  const isInView = useInView(containerRef, { margin: "100px" });
+
   return (
-    <section className="overflow-hidden border-y border-line py-5">
-      <div className="marquee-track flex w-max">
+    <section ref={containerRef} className="overflow-hidden border-y border-line py-5">
+      <div 
+        className="marquee-track flex w-max"
+        style={{ animationPlayState: isInView ? "running" : "paused" }}
+      >
         <Row />
         <Row hidden />
       </div>

@@ -24,13 +24,13 @@ export type PortfolioVideo = {
 };
 
 function asset(file: string) {
-  return `/assets/${encodeURIComponent(file)}`;
+  return `/assets/${file}`;
 }
 
 export const videos: PortfolioVideo[] = [
   {
     id: "reel-1",
-    file: asset("reel_1.mp4"),
+    file: asset("v2.mp4"),
     title: "Reel 01",
     category: "Trending Now",
     aspect: "9/16",
@@ -38,7 +38,7 @@ export const videos: PortfolioVideo[] = [
   },
   {
     id: "kushagra-reel",
-    file: asset("Kushagra B3 Script 7 reel.mp4"),
+    file: asset("v3.mp4"),
     title: "Kushagra B3 — Script 7",
     category: "Story Telling",
     aspect: "9/16",
@@ -46,7 +46,7 @@ export const videos: PortfolioVideo[] = [
   },
   {
     id: "ushma-17",
-    file: asset("Ushma script 17.mp4"),
+    file: asset("v4.mp4"),
     title: "Ushma — Script 17",
     category: "Story Telling",
     aspect: "16/9",
@@ -54,7 +54,7 @@ export const videos: PortfolioVideo[] = [
   },
   {
     id: "kushagra-8",
-    file: asset("Kushagra B3 Script 8 02.mp4"),
+    file: asset("v5.mp4"),
     title: "Kushagra B3 — Script 8",
     category: "Trending Now",
     aspect: "16/9",
@@ -62,7 +62,7 @@ export const videos: PortfolioVideo[] = [
   },
   {
     id: "p1-16-9",
-    file: asset("p 1 16-9.mp4"),
+    file: asset("v6.mp4"),
     title: "Project 1 — Cinematic",
     category: "New Releases",
     aspect: "16/9",
@@ -70,7 +70,7 @@ export const videos: PortfolioVideo[] = [
   },
   {
     id: "p2-9-16",
-    file: asset("p _2 9-16 fix.mp4"),
+    file: asset("v7.mp4"),
     title: "Project 2 — Vertical",
     category: "Music & Vibes",
     aspect: "9/16",
@@ -78,7 +78,7 @@ export const videos: PortfolioVideo[] = [
   },
   {
     id: "p1-square",
-    file: asset("p-1   1-1.mp4"),
+    file: asset("v8.mp4"),
     title: "Project 1 — Square",
     category: "New Releases",
     aspect: "1/1",
@@ -86,11 +86,19 @@ export const videos: PortfolioVideo[] = [
   },
   {
     id: "p1-9-16",
-    file: asset("p-1  9-16.mp4"),
+    file: asset("v9.mp4"),
     title: "Project 1 — Promo",
     category: "Music & Vibes",
     aspect: "9/16",
     span: "tall",
+  },
+  {
+    id: "virtual-dom-53",
+    file: asset("v10.mp4"),
+    title: "Virtual DOM & Reconciliation",
+    category: "Trending Now",
+    aspect: "16/9",
+    span: "wide",
   },
 ];
 

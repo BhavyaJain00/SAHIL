@@ -4,6 +4,21 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { AnimatePresence } from "framer-motion";
 import { Preloader } from "./Preloader";
 
+// Silence THREE.Clock deprecation warnings generated internally by React Three Fiber
+if (typeof window !== "undefined") {
+  const originalWarn = console.warn;
+  console.warn = (...args) => {
+    if (
+      args[0] &&
+      typeof args[0] === "string" &&
+      args[0].includes("THREE.Clock: This module has been deprecated")
+    ) {
+      return;
+    }
+    originalWarn(...args);
+  };
+}
+
 const LoadContext = createContext(false);
 
 export function useLoaded() {
