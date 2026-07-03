@@ -1,30 +1,13 @@
-import { LoadProvider } from "@/components/ui/LoadProvider";
-import { Cursor } from "@/components/ui/Cursor";
-import { Nav } from "@/components/layout/Nav";
-import { Hero } from "@/components/sections/Hero";
-import { Marquee } from "@/components/sections/Marquee";
-import { WorkSection } from "@/components/work/WorkSection";
-import { HorizontalGallery } from "@/components/sections/HorizontalGallery";
-import { About } from "@/components/sections/About";
-import { Services } from "@/components/sections/Services";
-import { Footer } from "@/components/sections/Footer";
+"use client";
 
 export default function Home() {
   return (
-    <LoadProvider>
-      <div className="film-grain">
-        <Cursor />
-        <Nav />
-        <main>
-          <Hero />
-          <Marquee />
-          <WorkSection />
-          <HorizontalGallery />
-          <About />
-          <Services />
-          <Footer />
-        </main>
-      </div>
-    </LoadProvider>
+    <div className="fixed inset-0 w-screen h-screen overflow-hidden bg-[#0a0908] z-50">
+      <iframe
+        src="/tour.html"
+        className="w-full h-full border-none block"
+        title="FLUX — 3D Night Studio Walkthrough"
+      />
+    </div>
   );
 }

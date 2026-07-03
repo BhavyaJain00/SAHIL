@@ -470,6 +470,66 @@ canvas{ display:block; }
   .drift{ animation:none; }
   #hintwrap{ animation:none; }
 }
+/* ---------- Room 2 (Conservatory) Shell & Elements ---------- */
+.floorface2 {
+  background:
+    radial-gradient(70% 50% at 50% 50%, rgba(255,140,80,.20), transparent 80%),
+    repeating-linear-gradient(90deg, #2b1c11 0 100px, #201309 100px 104px, #2e1d12 104px 200px, #1a0f06 200px 204px),
+    #1a0f06;
+  box-shadow: inset 0 0 400px 150px rgba(0,0,0,.8);
+}
+.ceilface2 {
+  background:
+    radial-gradient(ellipse at 50% 50%, #3e1b0c 0%, #170d06 70%, #050200 100%);
+  box-shadow: inset 0 0 200px rgba(0,0,0,.9);
+}
+.glassgrid {
+  position: absolute; inset: 0;
+  background:
+    repeating-linear-gradient(0deg, transparent 0 58px, rgba(255,170,80,.07) 58px 60px),
+    repeating-linear-gradient(90deg, transparent 0 58px, rgba(255,170,80,.07) 58px 60px);
+  border: 8px solid #2f1d0c;
+}
+.wallface2 {
+  background:
+    radial-gradient(100% 80% at 50% 40%, rgba(255,120,60,.16), rgba(0,0,0,.75) 85%),
+    linear-gradient(180deg, #23160e 0%, #170d06 60%, #0c0500 100%);
+  box-shadow: inset 0 0 200px rgba(0,0,0,.65);
+}
+.conservatory-beam {
+  position: absolute;
+  background: linear-gradient(90deg, #26160b, #120904);
+  box-shadow: 0 4px 12px rgba(0,0,0,.7);
+}
+.brassstand {
+  background: linear-gradient(135deg, #a67c3a, #5e4318);
+  border-radius: 4px;
+  box-shadow: 0 10px 28px rgba(0,0,0,.65), inset 0 1px 0 rgba(255,230,170,.3);
+}
+.galtoncase {
+  background: rgba(10,5,3,.85);
+  border: 6px solid #4a3319;
+  border-radius: 6px;
+  box-shadow: inset 0 0 30px rgba(0,0,0,.95), 0 14px 44px rgba(0,0,0,.6);
+}
+.chladni-plate {
+  background: #0d0c0b;
+  border: 4px solid #3c2918;
+  box-shadow: inset 0 0 20px rgba(0,0,0,.9), 0 14px 34px rgba(0,0,0,.6);
+}
+.lens-glass {
+  position: absolute; border-radius: 50%;
+  border: 3px solid #b8905a;
+  box-shadow: inset 0 0 10px rgba(255,255,255,.2), 0 8px 20px rgba(0,0,0,.5);
+  cursor: none; pointer-events: auto;
+}
+.lens-handle {
+  position: absolute; width: 60px; height: 10px;
+  background: linear-gradient(180deg, #3a2212, #1f1108);
+  border-radius: 2px;
+  transform-origin: 0 50%;
+  box-shadow: 0 4px 8px rgba(0,0,0,.5);
+}
 </style>
 </head>
 <body>
@@ -576,7 +636,34 @@ function cnv(w, h, parent, cls) {
    ================================================================ */
 const H = ROOM.floor - ROOM.ceil, CY = (ROOM.floor + ROOM.ceil) / 2;
 plane(ROOM.hw * 2, H, 0, CY, -ROOM.hd, 0, 0, 'wallface');          // back
-plane(ROOM.hw * 2, H, 0, CY, ROOM.hd, 180, 0, 'wallface');         // front
+/* front wall split to create a doorway at x = -300 */
+plane(1580, H, -1310, CY, ROOM.hd, 180, 0, 'wallface'); // front left
+plane(2180, H, 1010, CY, ROOM.hd, 180, 0, 'wallface');  // front right
+plane(440, 70, -300, -395, ROOM.hd, 180, 0, 'wallface'); // front top above door
+
+/* Door frame trim (brass columns to hide edges) */
+plane(12, H, -522, CY, ROOM.hd - 4, -90, 0, 'brassstand flat');
+plane(12, H, -78, CY, ROOM.hd - 4, 90, 0, 'brassstand flat');
+
+/* ---------- ROOM 2: CHROMATIC CONSERVATORY SHELL ---------- */
+const ROOM2 = { cx: 200, cz: 4200, hw: 1800, hd: 2000, floor: 370, ceil: -600 };
+const H2 = ROOM2.floor - ROOM2.ceil, CY2 = (ROOM2.floor + ROOM2.ceil) / 2;
+
+// Floor and Ceiling
+const floorP2 = plane(ROOM2.hw * 2, ROOM2.hd * 2, ROOM2.cx, ROOM2.floor, ROOM2.cz, 0, 90, 'floorface2 flat');
+const ceilP2 = plane(ROOM2.hw * 2, ROOM2.hd * 2, ROOM2.cx, ROOM2.ceil, ROOM2.cz, 0, -90, 'ceilface2 flat');
+el('glassgrid', ceilP2);
+
+// Walls facing inside Room 2
+plane(ROOM2.hd * 2, H2, ROOM2.cx - ROOM2.hw, CY2, ROOM2.cz, 90, 0, 'wallface2');  // left
+plane(ROOM2.hd * 2, H2, ROOM2.cx + ROOM2.hw, CY2, ROOM2.cz, -90, 0, 'wallface2'); // right
+plane(ROOM2.hw * 2, H2, ROOM2.cx, CY2, ROOM2.cz + ROOM2.hd, 0, 0, 'wallface2');  // back (far wall)
+
+// Shared wall (back side of Room 1's front wall) facing Room 2
+plane(1580, H2, -1310, CY2, ROOM.hd, 0, 0, 'wallface2'); // facing Room 2, left
+plane(2180, H2, 1010, CY2, ROOM.hd, 0, 0, 'wallface2');  // facing Room 2, right
+plane(440, H2 - 730, -300, ROOM2.ceil + (H2 - 730) / 2, ROOM.hd, 0, 0, 'wallface2'); // facing Room 2, top above doorway
+
 plane(ROOM.hd * 2, H, ROOM.hw, CY, 0, -90, 0, 'wallface');         // right
 plane(ROOM.hd * 2, H, -ROOM.hw, CY, 0, 90, 0, 'wallface');         // left
 const floorP = plane(ROOM.hw * 2, ROOM.hd * 2, 0, ROOM.floor, 0, 0, 90, 'floorface flat');
@@ -666,6 +753,8 @@ const tray = el('chalktray', boardFrame);
   const s = el('chalkstub', tray); s.style.left = x + 'px'; s.style.transform = `rotate(${r}deg)`;
 });
 
+let updateChalkboard;
+
 const boardSim = (() => {
   const g = boardC.getContext('2d');
   const off = document.createElement('canvas'); off.width = 1040; off.height = 620;
@@ -675,12 +764,12 @@ const boardSim = (() => {
   /* ghost layer: yesterday's derivations, half erased */
   o.fillStyle = 'rgba(0,0,0,0)'; o.clearRect(0, 0, 1040, 620);
   o.save();
-  o.font = 'italic 26px Georgia, serif'; o.fillStyle = CHALK + '.16)';
-  o.fillText('θ(t) = θ₀ e^{−γt} cos(ω_d t)', 90, 500);
-  o.fillText('∫ v dt  — match on motion', 560, 120);
-  o.fillText('ω_d = √(ω₀² − γ²)', 640, 560);
-  o.font = 'italic 21px Georgia, serif';
-  o.fillText('L(cut) ∝ 1/Δv ?', 460, 480);
+  o.font = 'italic 24px Georgia, serif'; o.fillStyle = CHALK + '.16)';
+  o.fillText('pendulum decay over time', 90, 500);
+  o.fillText('integrate velocity for motion alignment', 530, 120);
+  o.fillText('damped resonant frequency', 640, 560);
+  o.font = 'italic 20px Georgia, serif';
+  o.fillText('cut length matches velocity shift ?', 460, 480);
   /* elliptical Gaussian eraser swipes */
   o.globalCompositeOperation = 'destination-out';
   [[240, 490, 190, 46, -8], [660, 130, 170, 40, 6], [700, 545, 200, 44, -4]].forEach(([x, y, rx, ry, a]) => {
@@ -701,11 +790,11 @@ const boardSim = (() => {
   line(F_HAND(33), '.92', 40, 74, 'hello — Sahil Lunia. editor. friends call the work FLUX.');
   line(F_HAND(25), '.78', 40, 120, 'five years, eighty-one projects: reels, films, ads, music.');
   line(F_HAND(25), '.78', 40, 160, 'every cut is a change in velocity — this board is how I ease it.');
-  line(F_HAND(29), '.9', 40, 240, 'dP/dt = r·P(1 − P/K)');       line(F_NOTE(16), '.5', 380, 236, '← the preloader');
-  line(F_HAND(29), '.9', 40, 298, 'x(t) = 1 − e^(−λt)');          line(F_NOTE(16), '.5', 330, 294, '← every fade');
-  line(F_HAND(29), '.9', 40, 356, 'm·ẍ + c·ẋ + k·x = 0,   ζ = c ⁄ 2√(mk)'); line(F_NOTE(16), '.5', 560, 352, '← text, cursor, nav');
-  line(F_HAND(29), '.9', 40, 414, 'F(r) = e^(−r² ⁄ 2σ²)');        line(F_NOTE(16), '.5', 360, 410, '← magnetic buttons');
-  line(F_HAND(29), '.9', 40, 472, 'T = 2π √(L ⁄ g)');             line(F_NOTE(16), '.5', 300, 468, '← the scroll cue');
+  line(F_HAND(26), '.9', 40, 240, 'growth curves ease the loading progress.');                  line(F_NOTE(16), '.5', 490, 236, '← the preloader');
+  line(F_HAND(26), '.9', 40, 298, 'every fade resolves as an exponential decay.');                line(F_NOTE(16), '.5', 510, 294, '← transitions');
+  line(F_HAND(26), '.9', 40, 356, 'critically damped springs drive text, cursor, and nav.');     line(F_NOTE(16), '.5', 630, 352, '← UI physics');
+  line(F_HAND(26), '.9', 40, 414, 'buttons exert a Gaussian magnetic pull when hovered.');       line(F_NOTE(16), '.5', 630, 410, '← magnets');
+  line(F_HAND(26), '.9', 40, 472, 'the scroll cue swings like a natural seconds pendulum.');     line(F_NOTE(16), '.5', 630, 468, '← timing');
   /* margin notes */
   line(F_NOTE(17), '.55', 700, 200, 'cut on the action');
   line(F_NOTE(17), '.55', 830, 470, 'hold two more frames');
@@ -714,6 +803,28 @@ const boardSim = (() => {
   line(F_NOTE(17), '.55', 850, 90, '24 fps is a rhythm');
   line(F_NOTE(15), '.45', 700, 600, 's(τ) = 10τ³ − 15τ⁴ + 6τ⁵  — the hand');
   const content = new Image(); content.src = off.toDataURL();
+
+  updateChalkboard = (name, role, brand, statsStr) => {
+    o.save();
+    o.clearRect(0, 0, 1040, 620);
+    if (ghost.complete) o.drawImage(ghost, 0, 0);
+    line(F_HAND(33), '.92', 40, 74, `hello — ${name}. ${role.toLowerCase()}. friends call the work ${brand.split(" ")[0]}.`);
+    line(F_HAND(25), '.78', 40, 120, statsStr);
+    line(F_HAND(25), '.78', 40, 160, 'every cut is a change in velocity — this board is how I ease it.');
+    line(F_HAND(26), '.9', 40, 240, 'growth curves ease the loading progress.');                  line(F_NOTE(16), '.5', 490, 236, '← the preloader');
+    line(F_HAND(26), '.9', 40, 298, 'every fade resolves as an exponential decay.');                line(F_NOTE(16), '.5', 510, 294, '← transitions');
+    line(F_HAND(26), '.9', 40, 356, 'critically damped springs drive text, cursor, and nav.');     line(F_NOTE(16), '.5', 630, 352, '← UI physics');
+    line(F_HAND(26), '.9', 40, 414, 'buttons exert a Gaussian magnetic pull when hovered.');       line(F_NOTE(16), '.5', 630, 410, '← magnets');
+    line(F_HAND(26), '.9', 40, 472, 'the scroll cue swings like a natural seconds pendulum.');     line(F_NOTE(16), '.5', 630, 468, '← timing');
+    line(F_NOTE(17), '.55', 700, 200, 'cut on the action');
+    line(F_NOTE(17), '.55', 830, 470, 'hold two more frames');
+    line(F_NOTE(17), '.55', 60, 560, 'ease-out is just decay');
+    line(F_NOTE(17), '.55', 420, 560, 'let the audio lead');
+    line(F_NOTE(17), '.55', 850, 90, '24 fps is a rhythm');
+    line(F_NOTE(15), '.45', 700, 600, 's(τ) = 10τ³ − 15τ⁴ + 6τ⁵  — the hand');
+    o.restore();
+    content.src = off.toDataURL();
+  };
 
   /* reveal schedule: slices of the content image */
   const items = [
@@ -1742,10 +1853,437 @@ reg(0.88, 1.05, letterSim);
    SET PIECE 10 — DOOR + FIN + AMBIENT DRIFTERS
    ================================================================ */
 const door = plane(440, 730, -300, 5, FZ - 8, 180, 0, 'doorpanel flat');
+door.style.transformOrigin = '100% 50%';
 el('doorknob', door).style.top = 'calc(50% - 11px)';
-plane(900, 70, -300, -400, FZ - 10, 180, 0, 'flat').innerHTML =
+plane(900, 70, 200, -520, ROOM2.cz + ROOM2.hd - 10, 180, 0, 'flat').innerHTML =
   '<div class="finline">scene end. your footage picks up from here.</div>';
 
+const doorS = { x: 0, v: 0 };
+const doorSim = (dt, ts) => {
+  const target = camT > 0.96 ? 110 : 0;
+  springStep(doorS, target, 5, dt);
+  door.style.transform = door.dataset.base + ` rotateY(${-doorS.x}deg)`;
+};
+reg(0.90, 2.05, doorSim);
+
+/* ================================================================
+   ROOM 2 SET PIECES & SIMULATIONS (THE CONSERVATORY)
+   ================================================================ */
+
+/* ---- Set Piece 11: Acoustic Chladni Plate (Square Resonance) ---- */
+const chladniCard = plane(340, 340, -1590, -40, 3800, 90, 0, 'chladni-plate flat');
+const chladniC = cnv(300, 300, chladniCard);
+const chladniPlq = plane(300, 52, -1590, 170, 3800, 90, 0, 'plaquette flat');
+chladniPlq.innerHTML = '<b>EIGENVALUES · CHLADNI RESONANCES</b><br><span id="chladni-mode" style="color:var(--amber);">Mode (3, 2)</span>';
+
+const chladniSim = (() => {
+  const g = chladniC.getContext('2d');
+  const N = 450;
+  const pts = [];
+  for (let i = 0; i < N; i++) {
+    pts.push({ x: rand(10, 290), y: rand(10, 290) });
+  }
+  let modeM = 3, modeN = 2;
+  
+  chladniCard.style.pointerEvents = 'auto';
+  chladniCard.addEventListener('pointermove', () => {
+    if (Math.random() < 0.04) {
+      const list = [[2,2],[3,2],[4,2],[3,3],[4,3],[5,3],[5,4],[6,4],[6,5]];
+      const sel = list[Math.floor(Math.random() * list.length)];
+      if (sel[0] !== modeM || sel[1] !== modeN) {
+        modeM = sel[0]; modeN = sel[1];
+        document.getElementById('chladni-mode').textContent = `Resonance Mode (${modeM}, ${modeN})`;
+      }
+    }
+  });
+
+  return (dt, ts) => {
+    g.fillStyle = '#0a0908'; g.fillRect(0, 0, 300, 300);
+    g.strokeStyle = 'rgba(255,255,255,0.03)'; g.lineWidth = 1;
+    for (let i = 1; i < 4; i++) {
+      g.beginPath(); g.moveTo(i * 75, 0); g.lineTo(i * 75, 300);
+      g.moveTo(0, i * 75); g.lineTo(300, i * 75); g.stroke();
+    }
+
+    const A = 1, B = Math.sin(ts) > 0 ? 1 : -1;
+    const speed = 1900;
+
+    g.fillStyle = 'rgba(237,230,218,0.85)';
+    for (const p of pts) {
+      const xNorm = p.x / 300, yNorm = p.y / 300;
+      
+      const sinMX = Math.sin(modeM * Math.PI * xNorm);
+      const sinNY = Math.sin(modeN * Math.PI * yNorm);
+      const sinNX = Math.sin(modeN * Math.PI * xNorm);
+      const sinMY = Math.sin(modeM * Math.PI * yNorm);
+      
+      const W = A * sinMX * sinNY + B * sinNX * sinMY;
+      
+      const cosMX = Math.cos(modeM * Math.PI * xNorm);
+      const cosNY = Math.cos(modeN * Math.PI * yNorm);
+      const cosNX = Math.cos(modeN * Math.PI * xNorm);
+      const cosMY = Math.cos(modeM * Math.PI * yNorm);
+      
+      const dWdx = (A * modeM * cosMX * sinNY + B * modeN * cosNX * sinMY) * Math.PI / 300;
+      const dWdy = (A * modeN * sinMX * cosNY + B * modeM * sinNX * cosMY) * Math.PI / 300;
+      
+      const fx = -2 * W * dWdx * speed;
+      const fy = -2 * W * dWdy * speed;
+      
+      p.x += fx * dt + rand(-15, 15) * dt;
+      p.y += fy * dt + rand(-15, 15) * dt;
+      
+      p.x = clamp(p.x, 8, 292);
+      p.y = clamp(p.y, 8, 292);
+      
+      g.fillRect(p.x, p.y, 1.8, 1.8);
+    }
+  };
+})();
+reg(1.15, 1.45, chladniSim);
+
+/* ---- Set Piece 12: Prism Dispersion Table (Snell's Law) ---- */
+const prismTable = plane(260, 260, 1980, 198, 4200, -90, 90, 'deskface flat');
+const prismCard = plane(400, 300, 1980, -20, 4200, -90, 0, 'flat');
+const prismC = cnv(400, 300, prismCard);
+
+const prismSim = (() => {
+  const g = prismC.getContext('2d');
+  let angleOffset = 0;
+  
+  prismCard.style.pointerEvents = 'auto';
+  prismCard.addEventListener('pointermove', (e) => {
+    const rect = prismCard.getBoundingClientRect();
+    const my = (e.clientY - rect.top) / rect.height;
+    angleOffset = (my - 0.5) * 0.45;
+  });
+
+  return (dt, ts) => {
+    g.clearRect(0, 0, 400, 300);
+    g.fillStyle = 'rgba(10,9,8,0.2)'; g.fillRect(0, 0, 400, 300);
+    
+    // Draw prism (triangle)
+    const px = 200, py = 140, side = 110;
+    const h = side * Math.sqrt(3)/2;
+    const x0 = px, y0 = py - 2*h/3;
+    const x1 = px - side/2, y1 = py + h/3;
+    const x2 = px + side/2, y2 = py + h/3;
+    
+    g.strokeStyle = 'rgba(184,144,90,0.85)'; g.lineWidth = 3;
+    g.beginPath(); g.moveTo(x0, y0); g.lineTo(x1, y1); g.lineTo(x2, y2); g.closePath(); g.stroke();
+    g.fillStyle = 'rgba(126,147,184,0.06)'; g.fill();
+    
+    // Incoming white ray
+    const inAngle = 0.15 + angleOffset;
+    const rxStart = 20, ryStart = 120 + inAngle * 120;
+    const rxIntersect1 = px - 28, ryIntersect1 = py;
+    
+    g.strokeStyle = 'rgba(237,230,218,0.92)'; g.lineWidth = 4.2;
+    g.beginPath(); g.moveTo(rxStart, ryStart); g.lineTo(rxIntersect1, ryIntersect1); g.stroke();
+    
+    // Refracted wavelengths (Cauchy dispersion indices)
+    const wavelengths = [
+      { col: '#ff3300', n: 1.50 },
+      { col: '#ff9900', n: 1.53 },
+      { col: '#ffdd00', n: 1.56 },
+      { col: '#33cc33', n: 1.59 },
+      { col: '#3399ff', n: 1.62 },
+      { col: '#9933ff', n: 1.65 }
+    ];
+    
+    wavelengths.forEach((wl, idx) => {
+      const devAngleInside = (wl.n - 1) * 0.42;
+      const insideAngle = inAngle + devAngleInside;
+      const rxIntersect2 = px + 22 + idx * 1.5;
+      const ryIntersect2 = py - 4 + idx * 3;
+      
+      g.strokeStyle = wl.col; g.lineWidth = 1.8;
+      g.beginPath(); g.moveTo(rxIntersect1, ryIntersect1); g.lineTo(rxIntersect2, ryIntersect2); g.stroke();
+      
+      const exitAngle = insideAngle + (wl.n - 1) * 0.78;
+      const rxEnd = 380;
+      const ryEnd = ryIntersect2 + Math.tan(exitAngle) * (rxEnd - rxIntersect2);
+      
+      g.beginPath(); g.moveTo(rxIntersect2, ryIntersect2); g.lineTo(rxEnd, ryEnd); g.stroke();
+      
+      g.fillStyle = wl.col;
+      g.beginPath(); g.arc(rxEnd, ryEnd, 2.5, 0, TAU); g.fill();
+    });
+  };
+})();
+reg(1.35, 1.65, prismSim);
+
+/* ---- Set Piece 13: Newton's Cradle (Conservation of Momentum) ---- */
+const cradleTable = plane(460, 280, 200, 198, 6080, 0, 90, 'deskface flat');
+const cradleCard = plane(400, 320, 200, 38, 6080, 0, 0, 'flat');
+const cradleC = cnv(400, 320, cradleCard);
+
+const cradleSim = (() => {
+  const g = cradleC.getContext('2d');
+  const N = 5, R = 15, L = 160;
+  const px = 200, py = 50;
+  
+  const S = Array.from({ length: N }, (_, i) => ({
+    th: 0, w: 0,
+    x0: px + (i - (N - 1) / 2) * R * 2
+  }));
+  
+  let grab = null;
+  cradleCard.style.pointerEvents = 'auto';
+  cradleCard.addEventListener('pointerdown', (e) => {
+    const rect = cradleCard.getBoundingClientRect();
+    const mx = (e.clientX - rect.left) / rect.width * 400;
+    if (mx < S[0].x0 + R * 2) grab = 'left';
+    else if (mx > S[N-1].x0 - R * 2) grab = 'right';
+  });
+  
+  cradleCard.addEventListener('pointermove', (e) => {
+    if (grab === 'left') {
+      const rect = cradleCard.getBoundingClientRect();
+      const mx = (e.clientX - rect.left) / rect.width * 400;
+      const dx = mx - S[0].x0;
+      S[0].th = clamp(dx / L, -0.65, 0);
+      S[0].w = 0;
+    } else if (grab === 'right') {
+      const rect = cradleCard.getBoundingClientRect();
+      const mx = (e.clientX - rect.left) / rect.width * 400;
+      const dx = mx - S[N-1].x0;
+      S[N-1].th = clamp(dx / L, 0, 0.65);
+      S[N-1].w = 0;
+    }
+  });
+  
+  cradleCard.addEventListener('pointerup', () => { grab = null; });
+  cradleCard.addEventListener('pointerleave', () => { grab = null; });
+
+  return (dt) => {
+    g.clearRect(0, 0, 400, 320);
+    g.strokeStyle = '#b8905a'; g.lineWidth = 6; g.lineCap = 'round';
+    g.beginPath(); g.moveTo(px - 90, py); g.lineTo(px + 90, py); g.stroke();
+    
+    const gravity = 9.81 * 85;
+    const damp = 0.06;
+    const sub = 4, h = dt / sub;
+    
+    for (let step = 0; step < sub; step++) {
+      for (let i = 0; i < N; i++) {
+        if ((i === 0 && grab === 'left') || (i === N - 1 && grab === 'right')) continue;
+        const acc = -(gravity / L) * Math.sin(S[i].th) - damp * S[i].w;
+        S[i].w += acc * h;
+        S[i].th += S[i].w * h;
+      }
+      
+      const e = 0.98;
+      for (let passes = 0; passes < 6; passes++) {
+        for (let i = 0; i < N - 1; i++) {
+          const b1 = S[i], b2 = S[i+1];
+          const overlap = b2.th - b1.th;
+          if (overlap < 0) {
+            b1.th += overlap / 2;
+            b2.th -= overlap / 2;
+            const v1 = b1.w, v2 = b2.w;
+            b1.w = 0.5 * ((1 - e) * v1 + (1 + e) * v2);
+            b2.w = 0.5 * ((1 + e) * v1 + (1 - e) * v2);
+          }
+        }
+      }
+    }
+    
+    for (let i = 0; i < N; i++) {
+      const b = S[i];
+      const bx = b.x0 + L * Math.sin(b.th);
+      const by = py + L * Math.cos(b.th);
+      
+      g.strokeStyle = 'rgba(237,230,218,0.2)'; g.lineWidth = 1;
+      g.beginPath(); g.moveTo(b.x0, py); g.lineTo(bx, by); g.stroke();
+      
+      const gr = g.createRadialGradient(bx - R/3, by - R/3, 0, bx, by, R);
+      gr.addColorStop(0, '#ffffff'); gr.addColorStop(0.3, '#cccccc'); gr.addColorStop(1, '#3a3a3a');
+      g.fillStyle = gr;
+      g.beginPath(); g.arc(bx, by, R, 0, TAU); g.fill();
+      g.strokeStyle = 'rgba(255,255,255,0.12)'; g.stroke();
+    }
+  };
+})();
+reg(1.55, 1.85, cradleSim);
+
+/* ---- Set Piece 14: Galton Probability Board ---- */
+const galtonCard = plane(280, 500, -1580, -20, 5000, 90, 0, 'galtoncase flat');
+const galtonC = cnv(280, 500, galtonCard);
+
+const galtonSim = (() => {
+  const g = galtonC.getContext('2d');
+  const balls = [];
+  const bins = new Int32Array(11).fill(0);
+  
+  const pegs = [];
+  const rows = 8, spacingX = 24, spacingY = 24;
+  const startY = 110;
+  for (let r = 0; r < rows; r++) {
+    const py = startY + r * spacingY;
+    const count = r + 1;
+    const startX = 140 - (count - 1) * spacingX / 2;
+    for (let c = 0; c < count; c++) {
+      pegs.push({ x: startX + c * spacingX, y: py });
+    }
+  }
+
+  let spawnTimer = 0;
+
+  return (dt) => {
+    g.clearRect(0, 0, 280, 500);
+    g.fillStyle = '#0a0908'; g.fillRect(0, 0, 280, 500);
+    
+    g.strokeStyle = 'rgba(184,144,90,0.35)'; g.lineWidth = 2;
+    g.strokeRect(10, 10, 260, 480);
+    
+    g.fillStyle = '#b8905a';
+    for (const peg of pegs) {
+      g.beginPath(); g.arc(peg.x, peg.y, 2, 0, TAU); g.fill();
+    }
+    
+    spawnTimer += dt;
+    if (spawnTimer > 0.09) {
+      spawnTimer = 0;
+      if (balls.length < 150) {
+        balls.push({ x: 140 + rand(-2, 2), y: 40, vx: 0, vy: 0, state: 'falling' });
+      }
+    }
+    
+    const R = 3, gravity = 220;
+    g.fillStyle = '#ffb36b';
+    for (let i = balls.length - 1; i >= 0; i--) {
+      const b = balls[i];
+      if (b.state === 'falling') {
+        b.vy += gravity * dt;
+        b.x += b.vx * dt; b.y += b.vy * dt;
+        
+        for (const peg of pegs) {
+          const dx = b.x - peg.x, dy = b.y - peg.y;
+          const dist = Math.hypot(dx, dy);
+          if (dist < R + 4) {
+            const nx = dx / dist, ny = dy / dist;
+            const impulse = Math.max(0, -b.vx * nx - b.vy * ny);
+            b.vx += impulse * nx * 1.05 + rand(-20, 20);
+            b.vy = Math.max(20, b.vy - impulse * ny * 0.95);
+            b.x = peg.x + nx * (R + 4);
+            b.y = peg.y + ny * (R + 4);
+          }
+        }
+        
+        if (b.y > 380) {
+          const binIdx = clamp(Math.floor((b.x - 20) / 21.8), 0, 10);
+          bins[binIdx] = Math.min(bins[binIdx] + 1, 35);
+          balls.splice(i, 1);
+          continue;
+        }
+      }
+      g.beginPath(); g.arc(b.x, b.y, R, 0, TAU); g.fill();
+    }
+    
+    g.strokeStyle = 'rgba(237,230,218,0.08)'; g.lineWidth = 1;
+    for (let i = 0; i <= 11; i++) {
+      const bx = 20 + i * 21.8;
+      g.beginPath(); g.moveTo(bx, 380); g.lineTo(bx, 480); g.stroke();
+    }
+    
+    g.fillStyle = '#ff5c1f';
+    for (let bin = 0; bin < 11; bin++) {
+      const bx = 20 + bin * 21.8 + 2.5;
+      const count = bins[bin];
+      for (let j = 0; j < count; j++) {
+        g.fillRect(bx, 474 - j * 2.8, 16.8, 2.2);
+      }
+    }
+    
+    if (Math.random() < 0.02) {
+      const idx = Math.floor(Math.random() * 11);
+      if (bins[idx] > 0) bins[idx]--;
+    }
+  };
+})();
+reg(1.68, 1.92, galtonSim);
+
+/* ---- Set Piece 15: Logbook & Lens (Optics Magnification) ---- */
+const logDesk = plane(420, 300, -300, 205, 5850, 0, 90, 'deskface flat');
+const logbookRoot = plane(280, 200, -300, 204, 5850, 0, 90, 'lettercard flat');
+const logText = el('paperface papertext', logbookRoot);
+logText.id = 'logTextContainer';
+logText.style.cssText += 'position:absolute; inset:0; font-size:11.5px; padding:12px; line-height:1.5; color:#2c1e10;';
+logText.innerHTML = `
+  <div style="font-family:var(--disp); font-weight:700; font-size:12.5px; margin-bottom:6px; color:#5d4527; letter-spacing:0.04em;">LOGBOOK // KINETIC PHASING</div>
+  <p style="font-family:var(--hand); font-size:13px; line-height:1.5;">
+    A sequence of frames is like a string under tension. A cut is a boundary condition.
+    If you change the length, you shift the resonant frequencies. You cannot simply cut anywhere;
+    you must cut where the phases match. Resonance is the goal.
+  </p>
+  <div style="margin-top:14px; font-family:var(--mono); font-size:9.5px; color:#7d6c5a;">
+    SCENE 14 // ROTATIONAL DAMPING & EXPOSURE
+  </div>
+`;
+
+const lensC = cnv(120, 120, logbookRoot, 'lens-glass');
+const lensHandle = el('lens-handle', logbookRoot);
+
+const lensSim = (() => {
+  const lg = lensC.getContext('2d');
+  let mx = 140, my = 100;
+  let targetMX = 140, targetMY = 100;
+  
+  logbookRoot.style.pointerEvents = 'auto';
+  logbookRoot.addEventListener('pointermove', (e) => {
+    const rect = logbookRoot.getBoundingClientRect();
+    targetMX = clamp((e.clientX - rect.left) / rect.width * 280, 20, 260);
+    targetMY = clamp((e.clientY - rect.top) / rect.height * 200, 20, 180);
+  });
+  
+  const off = document.createElement('canvas'); off.width = 280; off.height = 200;
+  const o = off.getContext('2d');
+  o.fillStyle = '#efe7d6'; o.fillRect(0, 0, 280, 200);
+  o.fillStyle = '#2c1e10';
+  o.font = '700 12.5px Syne, sans-serif'; o.fillText('LOGBOOK // KINETIC PHASING', 12, 24);
+  o.font = 'italic 13px Georgia, serif';
+  o.fillText('A sequence of frames is like a string under tension.', 12, 54);
+  o.fillText('A cut is a boundary condition. If you change the', 12, 74);
+  o.fillText('length, you shift the resonant frequencies. You', 12, 94);
+  o.fillText('cannot simply cut anywhere; you must cut where the', 12, 114);
+  o.fillText('phases match. Resonance is the goal.', 12, 134);
+  o.font = '9.5px monospace'; o.fillStyle = '#7d6c5a';
+  o.fillText('SCENE 14 // ROTATIONAL DAMPING & EXPOSURE', 12, 175);
+
+  return (dt) => {
+    mx += (targetMX - mx) * (1 - Math.exp(-dt / 0.1));
+    my += (targetMY - my) * (1 - Math.exp(-dt / 0.1));
+    
+    lensC.style.left = (mx - 60) + 'px';
+    lensC.style.top = (my - 60) + 'px';
+    
+    lensHandle.style.left = mx + 'px';
+    lensHandle.style.top = my + 'px';
+    lensHandle.style.transform = `rotate(45deg) translate3d(60px, -5px, 2px)`;
+    
+    lg.clearRect(0, 0, 120, 120);
+    lg.save();
+    lg.beginPath(); lg.arc(60, 60, 56, 0, TAU); lg.clip();
+    
+    const zoom = 1.75;
+    const sw = 120 / zoom, sh = 120 / zoom;
+    const sx = mx - sw / 2, sy = my - sh / 2;
+    lg.drawImage(off, sx, sy, sw, sh, 0, 0, 120, 120);
+    
+    const gr = lg.createRadialGradient(40, 40, 0, 60, 60, 60);
+    gr.addColorStop(0, 'rgba(255,255,255,0.08)');
+    gr.addColorStop(0.5, 'transparent');
+    gr.addColorStop(1, 'rgba(0,0,0,0.15)');
+    lg.fillStyle = gr; lg.beginPath(); lg.arc(60, 60, 56, 0, TAU); lg.fill();
+    lg.restore();
+  };
+})();
+reg(1.80, 2.05, lensSim);
+
+/* ================================================================
+   DRIFT TEXTS
+   ================================================================ */
 [['ζ = c ⁄ 2√(mk)', -1500, -300, -800, 60],
  ['s(τ) = 10τ³ − 15τ⁴ + 6τ⁵', 900, -330, 500, 74],
  ['x(t) = 1 − e^{−λt}', 200, -280, -1500, 66],
@@ -1772,6 +2310,15 @@ settleReg('desk', rack, 2); settleReg('desk', domeCard, 3); settleReg('desk', mu
 GALLERY.forEach((fr, i) => settleReg('gallery', fr.el, i));
 tapeSprings.forEach((tp, i) => settleReg('shelf', tp.el, i * .45));
 settleReg('letter', letterRoot, 0);
+settleReg('chladni', chladniCard, 0);
+settleReg('chladni', chladniPlq, 1);
+settleReg('prism', prismTable, 0);
+settleReg('prism', prismCard, 1);
+settleReg('cradle', cradleTable, 0);
+settleReg('cradle', cradleCard, 1);
+settleReg('galton', galtonCard, 0);
+settleReg('logbook', logDesk, 0);
+settleReg('logbook', logbookRoot, 1);
 const settleActive = [], settleDone = new Set();
 function wakeZone(zone, ts) {
   if (settleDone.has(zone) || !settleZones[zone]) return;
@@ -1806,6 +2353,13 @@ const ZONES = [
   { t: 0.67, name: 'SC 05 · THE WINDOW', lum: .34 },
   { t: 0.825, name: 'SC 06 · THE CLOCK', lum: .3 },
   { t: 0.915, name: 'SC 07 · THE LETTER', lum: .46, wake: 'letter' },
+  { t: 1.000, name: 'SC 08 · THE CHROMATIC DOOR', lum: .40 },
+  { t: 1.160, name: 'SC 09 · THE CONSERVATORY', lum: .42, wake: 'desk2' },
+  { t: 1.250, name: 'SC 10 · CHLADNI RESONANCE', lum: .42, wake: 'chladni' },
+  { t: 1.480, name: 'SC 11 · PRISM REFRACTION', lum: .42, wake: 'prism' },
+  { t: 1.680, name: 'SC 12 · NEWTON\'S CRADLE', lum: .45, wake: 'cradle' },
+  { t: 1.800, name: 'SC 13 · GALTON PROBABILITY', lum: .45, wake: 'galton' },
+  { t: 1.900, name: 'SC 14 · THE LOGBOOK', lum: .40, wake: 'logbook' },
 ];
 const WP = [
   { t: 0.000, x: 300, z: 1620, lx: 300, lz: -2200, p: 0 },
@@ -1825,6 +2379,19 @@ const WP = [
   { t: 0.905, x: -1230, z: -360, lx: -2100, lz: -490, p: 0 },
   { t: 0.955, x: -620, z: 620, lx: -840, lz: 1420, p: -6 },
   { t: 1.000, x: -420, z: 620, lx: -420, lz: 2200, p: -1 },
+  { t: 1.080, x: -300, z: 2000, lx: -300, lz: 3200, p: 0 },
+  { t: 1.160, x: -300, z: 2700, lx: -300, lz: 3800, p: 0 },
+  { t: 1.250, x: -900, z: 3200, lx: -1400, lz: 3800, p: -2 },
+  { t: 1.340, x: -900, z: 3800, lx: -1590, lz: 3800, p: -4 },
+  { t: 1.420, x: -900, z: 3800, lx: -1590, lz: 3800, p: -4 },
+  { t: 1.500, x: 200, z: 4200, lx: 1000, lz: 4200, p: -2 },
+  { t: 1.580, x: 800, z: 4200, lx: 1980, lz: 4200, p: -4 },
+  { t: 1.660, x: 800, z: 4200, lx: 1980, lz: 4200, p: -4 },
+  { t: 1.740, x: 200, z: 5000, lx: 200, lz: 6180, p: -5 },
+  { t: 1.820, x: -600, z: 5000, lx: -1580, lz: 5000, p: -2 },
+  { t: 1.900, x: -300, z: 5400, lx: -300, lz: 5850, p: -25 },
+  { t: 1.950, x: -300, z: 5400, lx: -300, lz: 5850, p: -25 },
+  { t: 2.000, x: 200, z: 5900, lx: 200, lz: 7800, p: 0 }
 ];
 /* yaw from look-targets, unwrapped for continuity: fwd = (sinφ, −cosφ) */
 (() => {
@@ -1837,7 +2404,7 @@ const WP = [
   }
 })();
 function pathAt(t) {
-  t = clamp(t, 0, 1);
+  t = clamp(t, 0, 2);
   let i = 0;
   while (i < WP.length - 2 && t > WP[i + 1].t) i++;
   const a = WP[i], b = WP[i + 1];
@@ -1847,6 +2414,7 @@ function pathAt(t) {
 
 /* flywheel: v decays e^{−3t}; rubber-band past the ends */
 const PATH_LEN = 9000;
+const TOTAL_PATH_LEN = PATH_LEN * 2;
 let flyS = 0, flyV = 0, camT = 0;
 addEventListener('wheel', e => { e.preventDefault(); flyV += e.deltaY * 3.4; flyV = clamp(flyV, -5200, 5200); }, { passive: false });
 addEventListener('keydown', e => {
@@ -1860,7 +2428,7 @@ addEventListener('pointerdown', e => { if (e.isPrimary) { dragY = e.clientY; dra
 addEventListener('pointermove', e => {
   if (dragY !== null && e.isPrimary) {
     const dy = dragY - e.clientY; dragY = e.clientY;
-    flyS = clamp(flyS + dy * 5.2, -240, PATH_LEN + 240);
+    flyS = clamp(flyS + dy * 5.2, -240, TOTAL_PATH_LEN + 240);
     dragV = dy * 5.2 * 60;
   } else {
     gazeTX = (e.clientX / innerWidth * 2 - 1);
@@ -1924,13 +2492,13 @@ function frameLoop() {
   if (flyS < 0) {           // rubber band + critically damped return
     if (Math.abs(flyV) < 40) { const s = { x: flyS, v: flyV }; springStep(s, 0, 9.4, dt); flyS = s.x; flyV = s.v; }
     flyS = Math.max(flyS, -220);
-  } else if (flyS > PATH_LEN) {
-    if (Math.abs(flyV) < 40) { const s = { x: flyS, v: flyV }; springStep(s, PATH_LEN, 9.4, dt); flyS = s.x; flyV = s.v; }
-    flyS = Math.min(flyS, PATH_LEN + 220);
+  } else if (flyS > TOTAL_PATH_LEN) {
+    if (Math.abs(flyV) < 40) { const s = { x: flyS, v: flyV }; springStep(s, TOTAL_PATH_LEN, 9.4, dt); flyS = s.x; flyV = s.v; }
+    flyS = Math.min(flyS, TOTAL_PATH_LEN + 220);
   }
   const rb = flyS < 0 ? -(1 - 1 / (.55 * -flyS / 220 + 1)) * 220 :
-    flyS > PATH_LEN ? (1 - 1 / (.55 * (flyS - PATH_LEN) / 220 + 1)) * 220 : 0;
-  camT = clamp((clamp(flyS, 0, PATH_LEN) + rb) / PATH_LEN, -0.03, 1.03);
+    flyS > TOTAL_PATH_LEN ? (1 - 1 / (.55 * (flyS - TOTAL_PATH_LEN) / 220 + 1)) * 220 : 0;
+  camT = clamp((clamp(flyS, 0, TOTAL_PATH_LEN) + rb) / PATH_LEN, -0.03, 2.03);
 
   /* --- path + smoothing springs --- */
   const P = pathAt(camT);
@@ -1983,8 +2551,20 @@ function frameLoop() {
   irisVeil.style.opacity = clamp((1 - gain) * 1.2, 0, .55).toFixed(3);
   irisBloom.style.opacity = clamp((gain - 1.18) * .5, 0, .22).toFixed(3);
 
-  /* --- HUD timecode: the walk is a 2-minute master at 24 fps --- */
-  const fr = Math.round(clamp(camT, 0, 1) * 120 * 24);
+  // Stage twilight background shift as camera moves into Room 2
+  const sunsetT = clamp((camT - 0.96) / 0.16, 0, 1);
+  if (sunsetT > 0) {
+    const colA = [10, 9, 8], colB = [34, 18, 9];
+    const r = Math.round(lerp(colA[0], colB[0], sunsetT));
+    const gCol = Math.round(lerp(colA[1], colB[1], sunsetT));
+    const b = Math.round(lerp(colA[2], colB[2], sunsetT));
+    stage.style.background = `radial-gradient(ellipse at 50% 50%, rgb(${r},${gCol},${b}) 0%, #060403 100%)`;
+  } else {
+    stage.style.background = 'var(--void)';
+  }
+
+  /* --- HUD timecode: the walk is a 4-minute master at 24 fps --- */
+  const fr = Math.round(clamp(camT, 0, 2) * 120 * 24);
   const mmm = Math.floor(fr / (24 * 60)), sss = Math.floor(fr / 24) % 60, fff = fr % 24;
   tcval.textContent = `00:${String(mmm).padStart(2, '0')}:${String(sss).padStart(2, '0')}:${String(fff).padStart(2, '0')}`;
 
@@ -2037,6 +2617,57 @@ function frameLoop() {
   }
 }
 requestAnimationFrame(frameLoop);
+
+fetch('/assets/portfolio.json')
+  .then(r => r.json())
+  .then(data => {
+    // 1. Update Intro
+    const il1 = document.getElementById('il1');
+    if (il1) il1.textContent = `${data.site.brand} — the night studio of ${data.site.name}, ${data.site.role.toLowerCase()}`;
+    
+    // 2. Update Chalkboard
+    if (typeof updateChalkboard === 'function') {
+      const statsStr = `${data.stats[0].value} years, ${data.stats[1].value} projects: ${data.categories.slice(1).join(', ').toLowerCase()}.`;
+      updateChalkboard(data.site.name, data.site.role, data.site.brand, statsStr);
+    }
+    
+    // 3. Update Tapes
+    const tapeLabels = [];
+    data.tools.forEach(t => tapeLabels.push(t.toUpperCase()));
+    data.stats.forEach(s => tapeLabels.push(`${s.value}${s.suffix} ${s.label.toUpperCase()}`));
+    data.categories.filter(c => c !== 'All').forEach(c => tapeLabels.push(c.toUpperCase()));
+    tapeSprings.forEach((tp, idx) => {
+      if (tapeLabels[idx]) {
+        const spine = tp.el.querySelector('.spinelab');
+        if (spine) spine.textContent = tapeLabels[idx];
+      }
+    });
+    
+    // 4. Update Monitors
+    const mon169 = data.videos.find(v => v.aspect === '16/9');
+    if (mon169) {
+      const label = mainMon.scr.closest('.plane').querySelector('.screenlabel');
+      if (label) label.textContent = `now cutting — ${mon169.title.toLowerCase()}`;
+      const video = mainMon.scr.querySelector('video');
+      if (video) { video.src = mon169.file; video.load(); video.play().catch(()=>{}); }
+    }
+    const mon916 = data.videos.find(v => v.aspect === '9/16');
+    if (mon916) {
+      const label = reelMon.scr.closest('.plane').querySelector('.screenlabel');
+      if (label) label.textContent = `${mon916.title.toLowerCase()} · 9:16`;
+      const video = reelMon.scr.querySelector('video');
+      if (video) { video.src = mon916.file; video.load(); video.play().catch(()=>{}); }
+    }
+    
+    // 5. Update Letter Links
+    const plinks = letterRoot.querySelector('.paperlinks');
+    if (plinks) {
+      plinks.innerHTML = data.contact.map(c => `
+        <a href="${c.href}" target="_blank" rel="noopener">${c.label === 'Gmail' ? c.value : c.value}</a>
+      `).join('');
+    }
+  })
+  .catch(err => console.error("Error loading dynamic portfolio details:", err));
 </script>
 </body>
 </html>

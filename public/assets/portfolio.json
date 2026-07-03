@@ -1,0 +1,128 @@
+{
+  "site": {
+    "name": "Sahil Lunia",
+    "brand": "FLUX STREAM",
+    "role": "Video Editor",
+    "tagline": "An Editor who has refined countless stories into impactful and engaging masterpieces"
+  },
+  "stats": [
+    { "value": 5, "suffix": "+", "label": "Years" },
+    { "value": 81, "suffix": "+", "label": "Projects" },
+    { "value": 4, "suffix": "+", "label": "Clients" }
+  ],
+  "videos": [
+    {
+      "id": "reel-1",
+      "file": "/assets/v2.mp4",
+      "title": "Reel 01",
+      "category": "Trending Now",
+      "aspect": "9/16",
+      "span": "tall"
+    },
+    {
+      "id": "kushagra-reel",
+      "file": "/assets/v3.mp4",
+      "title": "Kushagra B3 — Script 7",
+      "category": "Story Telling",
+      "aspect": "9/16",
+      "span": "tall"
+    },
+    {
+      "id": "ushma-17",
+      "file": "/assets/v4.mp4",
+      "title": "Ushma — Script 17",
+      "category": "Story Telling",
+      "aspect": "16/9",
+      "span": "wide"
+    },
+    {
+      "id": "kushagra-8",
+      "file": "/assets/v5.mp4",
+      "title": "Kushagra B3 — Script 8",
+      "category": "Trending Now",
+      "aspect": "16/9",
+      "span": "wide"
+    },
+    {
+      "id": "p1-16-9",
+      "file": "/assets/v6.mp4",
+      "title": "Project 1 — Cinematic",
+      "category": "New Releases",
+      "aspect": "16/9",
+      "span": "normal"
+    },
+    {
+      "id": "p2-9-16",
+      "file": "/assets/v7.mp4",
+      "title": "Project 2 — Vertical",
+      "category": "Music & Vibes",
+      "aspect": "9/16",
+      "span": "tall"
+    },
+    {
+      "id": "p1-square",
+      "file": "/assets/v8.mp4",
+      "title": "Project 1 — Square",
+      "category": "New Releases",
+      "aspect": "1/1",
+      "span": "square"
+    },
+    {
+      "id": "p1-9-16",
+      "file": "/assets/v9.mp4",
+      "title": "Project 1 — Promo",
+      "category": "Music & Vibes",
+      "aspect": "9/16",
+      "span": "tall"
+    },
+    {
+      "id": "virtual-dom-53",
+      "file": "/assets/v10.mp4",
+      "title": "Virtual DOM & Reconciliation",
+      "category": "Trending Now",
+      "aspect": "16/9",
+      "span": "wide"
+    }
+  ],
+  "categories": [
+    "All",
+    "Trending Now",
+    "New Releases",
+    "Story Telling",
+    "Music & Vibes"
+  ],
+  "experience": {
+    "bio": "Video Editor with 4+ years of professional experience — YouTube, short films, ads, reels, music videos & corporate projects. Storytelling, transitions, VFX & cinematic polish.",
+    "hover_bio": "An Editor who has refined countless stories into impactful and engaging masterpieces.",
+    "offers": [
+      "Cinematic editing",
+      "VFX & motion graphics",
+      "Reels, Shorts & TikTok",
+      "On-time delivery"
+    ]
+  },
+  "tools": [
+    "Premiere Pro",
+    "After Effects",
+    "Photoshop",
+    "CapCut",
+    "ChatGPT"
+  ],
+  "contact": [
+    {
+      "label": "Instagram",
+      "value": "FLUX EDIT",
+      "href": "https://instagram.com"
+    },
+    {
+      "label": "Gmail",
+      "value": "Contact",
+      "href": "mailto:contact@fluxedit.com"
+    },
+    {
+      "label": "WhatsApp",
+      "value": "DM Only",
+      "href": "https://wa.me"
+    }
+  ]
+}

@@ -1,16 +1,4 @@
-export const site = {
-  name: "Sahil Lunia",
-  brand: "FLUX STREAM",
-  role: "Video Editor",
-  tagline:
-    "An Editor who has refined countless stories into impactful and engaging masterpieces",
-} as const;
-
-export const stats = [
-  { value: 5, suffix: "+", label: "Years" },
-  { value: 81, suffix: "+", label: "Projects" },
-  { value: 4, suffix: "+", label: "Clients" },
-] as const;
+import portfolioData from "../../public/assets/portfolio.json";
 
 export type VideoAspect = "16/9" | "9/16" | "1/1";
 
@@ -23,125 +11,10 @@ export type PortfolioVideo = {
   span?: "wide" | "tall" | "square" | "normal";
 };
 
-function asset(file: string) {
-  return `/assets/${file}`;
-}
-
-export const videos: PortfolioVideo[] = [
-  {
-    id: "reel-1",
-    file: asset("v2.mp4"),
-    title: "Reel 01",
-    category: "Trending Now",
-    aspect: "9/16",
-    span: "tall",
-  },
-  {
-    id: "kushagra-reel",
-    file: asset("v3.mp4"),
-    title: "Kushagra B3 — Script 7",
-    category: "Story Telling",
-    aspect: "9/16",
-    span: "tall",
-  },
-  {
-    id: "ushma-17",
-    file: asset("v4.mp4"),
-    title: "Ushma — Script 17",
-    category: "Story Telling",
-    aspect: "16/9",
-    span: "wide",
-  },
-  {
-    id: "kushagra-8",
-    file: asset("v5.mp4"),
-    title: "Kushagra B3 — Script 8",
-    category: "Trending Now",
-    aspect: "16/9",
-    span: "wide",
-  },
-  {
-    id: "p1-16-9",
-    file: asset("v6.mp4"),
-    title: "Project 1 — Cinematic",
-    category: "New Releases",
-    aspect: "16/9",
-    span: "normal",
-  },
-  {
-    id: "p2-9-16",
-    file: asset("v7.mp4"),
-    title: "Project 2 — Vertical",
-    category: "Music & Vibes",
-    aspect: "9/16",
-    span: "tall",
-  },
-  {
-    id: "p1-square",
-    file: asset("v8.mp4"),
-    title: "Project 1 — Square",
-    category: "New Releases",
-    aspect: "1/1",
-    span: "square",
-  },
-  {
-    id: "p1-9-16",
-    file: asset("v9.mp4"),
-    title: "Project 1 — Promo",
-    category: "Music & Vibes",
-    aspect: "9/16",
-    span: "tall",
-  },
-  {
-    id: "virtual-dom-53",
-    file: asset("v10.mp4"),
-    title: "Virtual DOM & Reconciliation",
-    category: "Trending Now",
-    aspect: "16/9",
-    span: "wide",
-  },
-];
-
-export const categories = [
-  "All",
-  "Trending Now",
-  "New Releases",
-  "Story Telling",
-  "Music & Vibes",
-] as const;
-
-export const experience = {
-  bio: "Video Editor with 4+ years of professional experience — YouTube, short films, ads, reels, music videos & corporate projects. Storytelling, transitions, VFX & cinematic polish.",
-  offers: [
-    "Cinematic editing",
-    "VFX & motion graphics",
-    "Reels, Shorts & TikTok",
-    "On-time delivery",
-  ],
-} as const;
-
-export const tools = [
-  "Premiere Pro",
-  "After Effects",
-  "Photoshop",
-  "CapCut",
-  "ChatGPT",
-] as const;
-
-export const contact = [
-  {
-    label: "Instagram",
-    value: "FLUX EDIT",
-    href: "https://instagram.com",
-  },
-  {
-    label: "Gmail",
-    value: "Contact",
-    href: "mailto:contact@fluxedit.com",
-  },
-  {
-    label: "WhatsApp",
-    value: "DM Only",
-    href: "https://wa.me",
-  },
-] as const;
+export const site = portfolioData.site;
+export const stats = portfolioData.stats;
+export const videos = portfolioData.videos as unknown as PortfolioVideo[];
+export const categories = portfolioData.categories;
+export const experience = portfolioData.experience;
+export const tools = portfolioData.tools;
+export const contact = portfolioData.contact;

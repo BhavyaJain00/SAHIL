@@ -9,6 +9,7 @@ import { site } from "@/data/portfolio";
 import { TextScramble } from "@/components/ui/TextScramble";
 
 const LINKS = [
+  { label: "3D Tour", href: "/tour.html" },
   { label: "Work", href: "#work" },
   { label: "About", href: "#about" },
   { label: "Contact", href: "#contact" },

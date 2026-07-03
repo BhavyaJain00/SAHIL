@@ -95,14 +95,29 @@ export function Hero() {
         </h1>
 
         <div className="mt-10 grid gap-8 sm:grid-cols-2 sm:items-end">
-          <motion.p
-            className="max-w-md text-base leading-relaxed text-muted sm:text-lg"
-            initial={{ opacity: 0, y: 24 }}
-            animate={loaded ? { opacity: 1, y: 0 } : {}}
-            transition={{ delay: 0.55, duration: 0.8, ease: easeOutExpo }}
-          >
-            {site.tagline}.
-          </motion.p>
+          <div className="flex flex-col gap-5 items-start">
+            <motion.p
+              className="max-w-md text-base leading-relaxed text-muted sm:text-lg"
+              initial={{ opacity: 0, y: 24 }}
+              animate={loaded ? { opacity: 1, y: 0 } : {}}
+              transition={{ delay: 0.55, duration: 0.8, ease: easeOutExpo }}
+            >
+              {site.tagline}.
+            </motion.p>
+            <motion.div
+              initial={{ opacity: 0, y: 24 }}
+              animate={loaded ? { opacity: 1, y: 0 } : {}}
+              transition={{ delay: 0.62, duration: 0.8, ease: easeOutExpo }}
+            >
+              <a
+                href="/tour.html"
+                className="group relative inline-flex items-center gap-3 border border-accent/30 bg-accent/[0.02] px-6 py-3 font-mono text-xs uppercase tracking-[0.2em] text-accent transition-all duration-300 hover:border-accent hover:bg-accent/10 hover:text-ink cursor-none"
+              >
+                <span>Enter 3D Night Studio</span>
+                <span className="text-sm transition-transform duration-300 group-hover:translate-x-1">→</span>
+              </a>
+            </motion.div>
+          </div>
 
           <motion.div
             className="flex items-end justify-between gap-6 sm:justify-end sm:gap-10"
